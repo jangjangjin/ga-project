@@ -130,6 +130,29 @@
     </div>
   </footer>
 
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // 폼의 기본 제출 막기
+    
+        const form = e.target;
+        const formData = new FormData(form);
+    
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData
+        });
+    
+        const result = await response.json();
+    
+        if (result.result === 'success') {
+            alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+            window.location.href = 'login.html'; // 로그인 페이지로 이동
+        } else {
+            alert(result.msg || '회원가입에 실패했습니다.');
+        }
+    });
+    </script>
+
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/js/isotope.min.js"></script>
