@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 및 결제</title>
+    <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
+    <style>
+        .hotel-info {
+            max-width: 500px;
+            margin: 40px auto 0 auto;
+            padding: 20px 30px 20px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .hotel-info img {
+            width: 90px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .hotel-info-details {
+            flex: 1;
+        }
+        .hotel-info-details h3 {
+            margin: 0 0 6px 0;
+            font-size: 1.2em;
+        }
+        .hotel-info-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.98em;
+        }
+        .reservation-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .reservation-container h2 {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .reservation-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .reservation-container input,
+        .reservation-container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .reservation-container .result {
+            margin-bottom: 18px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .reservation-container button {
+            width: 100%;
+            padding: 12px;
+            background: #4e9cff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .reservation-container button:hover {
+            background: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <div class="hotel-info">
+        <img src="assets/images/property-01.jpg" alt="호텔 대표 이미지">
+        <div class="hotel-info-details">
+            <h3>테스트 호텔</h3>
+            <p>서울특별시 강남구 테헤란로 123</p>
+        </div>
+    </div>
+    <div class="reservation-container">
+        <h2>예약 및 결제</h2>
+        <form id="reservationForm">
+            <label for="checkin">체크인 날짜</label>
+            <input type="date" id="checkin" name="checkin" required>
+
+            <label for="checkout">체크아웃 날짜</label>
+            <input type="date" id="checkout" name="checkout" required>
+
+            <div class="result">
+                숙박 일수: <span id="nights">0</span>박<br>
+                총 금액: <span id="totalPrice">0</span>원
+            </div>
+
+            <label for="payment">결제 수단</label>
+            <select id="payment" name="payment" required>
+                <option value="">결제 수단 선택</option>
+                <option value="card">카드 결제</option>
+                <option value="bank">계좌이체</option>
+                <option value="kakaopay">카카오페이</option>
+                <option value="naverpay">네이버페이</option>
+            </select>
+
+            <button type="submit">결제하기</button>
+        </form>
+    </div>
+    <script>
+        const checkin = document.getElementById('checkin');
+        const checkout = document.getElementById('checkout');
+        const nights = document.getElementById('nights');
+        const totalPrice = document.getElementById('totalPrice');
+        const pricePerNight = 100000;
+
+        function calculateNightsAndPrice() {
+            const checkinDate = new Date(checkin.value);
+            const checkoutDate = new Date(checkout.value);
+            if (checkin.value && checkout.value && checkoutDate > checkinDate) {
+                const diffTime = checkoutDate - checkinDate;
+                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                nights.textContent = diffDays;
+                totalPrice.textContent = (diffDays * pricePerNight).toLocaleString();
+            } else {
+                nights.textContent = 0;
+                totalPrice.textContent = 0;
+            }
+        }
+
+        checkin.addEventListener('change', calculateNightsAndPrice);
+        checkout.addEventListener('change', calculateNightsAndPrice);
+
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (nights.textContent === '0') {
+                alert('숙박 일수를 확인해주세요.');
+                return;
+            }
+            if (!document.getElementById('payment').value) {
+                alert('결제 수단을 선택해주세요.');
+                return;
+            }
+            location.href = 'payment-success.html';
+            // 실제 결제 연동은 백엔드 구현 필요
+        });
+    </script>
+</body>
+</html> 

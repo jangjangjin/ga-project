@@ -614,3 +614,51 @@ resource "aws_codestarconnections_connection" "github" {
   name          = "github-connection"
   provider_type = "GitHub"
 }
+
+
+# 1. Virtual Private Gateway 생성
+resource "aws_vpn_gateway" "main" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "${var.environment}-vpn-gw"
+  }
+}
+
+# 2. Customer Gateway 생성 (온프레미스 정보 입력)
+resource "aws_customer_gateway" "main" {
+  bgp_asn    = 65000  # 온프레미스 장비의 BGP ASN (정적 라우팅이면 아무 값이나 가능)
+  ip_address = "121.160.41.53"  
+  type       = "ipsec.1"
+  tags = {
+    Name = "${var.environment}-customer-gw"
+  }
+}
+
+# 3. Site-to-Site VPN 연결 생성
+resource "aws_vpn_connection" "main" {
+  vpn_gateway_id      = aws_vpn_gateway.main.id
+  customer_gateway_id = aws_customer_gateway.main.id
+  type                = "ipsec.1"
+
+  static_routes_only = true  # 정적 라우팅 사용 시 true
+
+  tags = {
+    Name = "${var.environment}-vpn-connection"
+  }
+}
+
+# 4. VPN Connection Route (온프레미스 네트워크 대역)
+resource "aws_vpn_connection_route" "onprem" {
+  vpn_connection_id = aws_vpn_connection.main.id
+  destination_cidr_block = "172.18.0.0/16"  # 온프레미스 네트워크 대역
+}
+
+# 5. VPC Route Table에 온프레미스 경로 추가
+resource "aws_route" "to_onprem" {
+  route_table_id         = aws_route_table.private.id  # 또는 public.id, 필요에 따라
+  destination_cidr_block = "172.18.0.0/24"
+  gateway_id             = aws_vpn_gateway.main.id
+}
+# =====================================
+
+

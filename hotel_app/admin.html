@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호텔 관리자 페이지</title>
+    <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <style>
+        /* 금액 입력란의 스핀 버튼(증감 화살표) 숨기기 */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        /* 폼 그룹 간격 및 라벨-입력란 간격 조정 */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4 d-flex align-items-center justify-content-between">
+            <span>호텔 관리</span>
+            <button id="show-reservations-btn" class="btn btn-outline-primary btn-sm ms-3">예약 조회</button>
+        </h2>
+        <div class="card mb-4">
+            <div class="card-header">호텔 등록</div>
+            <div class="card-body">
+                <form id="hotel-register-form" class="row g-2 align-items-end">
+                    <div class="form-group mb-2 col-12">
+                        <label for="hotelName">이름</label>
+                        <input type="text" class="form-control" id="hotelName" required>
+                    </div>
+                    <div class="form-group mb-2 col-12">
+                        <label for="hotelAddress">주소</label>
+                        <input type="text" class="form-control" id="hotelAddress" required>
+                    </div>
+                    <div class="form-group mb-2 col-12">
+                        <label for="hotelDescription">상세 설명</label>
+                        <textarea class="form-control" id="hotelDescription" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group mb-2 col-12">
+                        <label for="hotelPrice">금액</label>
+                        <input type="number" class="form-control" id="hotelPrice" required min="0">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary" id="register-btn">등록</button>
+                        <button type="button" class="btn btn-warning d-none" id="edit-btn">수정</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- 예약 조회 모달 -->
+        <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reservationModalLabel">예약 조회</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered text-center align-middle" id="reservation-list-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">예약자명</th>
+                                    <th class="text-center align-middle">연락처</th>
+                                    <th class="text-center align-middle">호텔명</th>
+                                    <th class="text-center align-middle">체크인</th>
+                                    <th class="text-center align-middle">체크아웃</th>
+                                    <th class="text-center align-middle">결제 수단</th>
+                                    <th class="text-center align-middle">결제 금액</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 예약 목록이 여기에 표시됩니다 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">호텔 목록</div>
+            <div class="card-body">
+                <table class="table table-bordered text-center align-middle" id="hotel-list-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center align-middle">이름</th>
+                            <th class="text-center align-middle">주소</th>
+                            <th class="text-center align-middle">상세 설명</th>
+                            <th class="text-center align-middle">금액</th>
+                            <th class="text-center align-middle">수정</th>
+                            <th class="text-center align-middle">삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 호텔 목록이 여기에 표시됩니다 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        // 예시 데이터 (실제 구현시 서버와 연동 필요)
+        let hotels = [
+            {
+                name: '그랜드 호텔',
+                address: '서울특별시 중구 을지로 123',
+                description: '럭셔리한 시설과 최고의 서비스를 자랑하는 5성급 호텔',
+                price: 250000
+            },
+            {
+                name: '비즈니스 호텔',
+                address: '부산광역시 해운대구 해운대로 456',
+                description: '비즈니스 여행객을 위한 합리적인 가격과 편리한 위치',
+                price: 90000
+            }
+        ];
+        let reservations = [
+            {
+                guest: '홍길동',
+                hotel: '그랜드 호텔',
+                checkin: '2024-07-01',
+                checkout: '2024-07-03',
+                phone: '010-1234-5678',
+                paymentMethod: '카드',
+                paymentAmount: 500000
+            },
+            {
+                guest: '김영희',
+                hotel: '비즈니스 호텔',
+                checkin: '2024-07-05',
+                checkout: '2024-07-07',
+                phone: '010-8765-4321',
+                paymentMethod: '현금',
+                paymentAmount: 180000
+            }
+        ];
+        let editIndex = null;
+        function resetForm() {
+            $('#hotel-register-form')[0].reset();
+            $('#edit-btn').addClass('d-none');
+            editIndex = null;
+        }
+
+        function renderHotels() {
+            const tbody = $('#hotel-list-table tbody');
+            tbody.empty();
+            hotels.forEach((hotel, idx) => {
+                tbody.append(`
+                    <tr>
+                        <td class="text-center align-middle"><span class="hotel-name">${hotel.name}</span></td>
+                        <td class="text-center align-middle"><span class="hotel-address">${hotel.address}</span></td>
+                        <td class="text-center align-middle"><span class="hotel-description">${hotel.description}</span></td>
+                        <td class="text-center align-middle"><span class="hotel-price">${hotel.price}</span></td>
+                        <td class="text-center align-middle"><button class="btn btn-sm btn-warning edit-btn" data-idx="${idx}">수정</button></td>
+                        <td class="text-center align-middle"><button class="btn btn-sm btn-danger delete-btn" data-idx="${idx}">삭제</button></td>
+                    </tr>
+                `);
+            });
+        }
+
+        function renderReservations() {
+            const tbody = $('#reservation-list-table tbody');
+            tbody.empty();
+            reservations.forEach(resv => {
+                tbody.append(`
+                    <tr>
+                        <td class="text-center align-middle">${resv.guest}</td>
+                        <td class="text-center align-middle">${resv.phone}</td>
+                        <td class="text-center align-middle">${resv.hotel}</td>
+                        <td class="text-center align-middle">${resv.checkin}</td>
+                        <td class="text-center align-middle">${resv.checkout}</td>
+                        <td class="text-center align-middle">${resv.paymentMethod}</td>
+                        <td class="text-center align-middle">${resv.paymentAmount.toLocaleString()}원</td>
+                    </tr>
+                `);
+            });
+        }
+
+        $('#hotel-register-form').on('submit', function(e) {
+            e.preventDefault();
+            const name = $('#hotelName').val();
+            const address = $('#hotelAddress').val();
+            const description = $('#hotelDescription').val();
+            const price = $('#hotelPrice').val();
+            hotels.push({ name, address, description, price });
+            renderHotels();
+            resetForm();
+        });
+
+        $('#edit-btn').on('click', function() {
+            if (editIndex !== null) {
+                const name = $('#hotelName').val();
+                const address = $('#hotelAddress').val();
+                const description = $('#hotelDescription').val();
+                const price = $('#hotelPrice').val();
+                hotels[editIndex] = { name, address, description, price };
+                renderHotels();
+                resetForm();
+            }
+        });
+
+        $('#hotel-list-table').on('click', '.delete-btn', function() {
+            const idx = $(this).data('idx');
+            hotels.splice(idx, 1);
+            renderHotels();
+        });
+
+        $('#hotel-list-table').on('click', '.edit-btn', function() {
+            const idx = $(this).data('idx');
+            const hotel = hotels[idx];
+            $('#hotelName').val(hotel.name);
+            $('#hotelAddress').val(hotel.address);
+            $('#hotelDescription').val(hotel.description);
+            $('#hotelPrice').val(hotel.price);
+            editIndex = idx;
+            $('#edit-btn').removeClass('d-none');
+        });
+
+        $('#show-reservations-btn').on('click', function() {
+            renderReservations();
+            var modal = new bootstrap.Modal(document.getElementById('reservationModal'));
+            modal.show();
+        });
+
+        // 초기 렌더링
+        renderHotels();
+    </script>
+</body>
+</html> 
