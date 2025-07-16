@@ -1,0 +1,37 @@
+# Local .terraform directories
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+# Terraform plan and state files
+*.tfstate
+*.tfstate.backup
+*.tfplan
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Override files that are not supposed to be committed
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Sensitive or user-specific variable files
+*.tfvars
+*.tfvars.json
+
+# Output files from local-exec provisioner
+*.log
+*.out
+
+# IDE or system specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Windows-specific
+terraform-provider-*/ # in case of manually installed binary providers

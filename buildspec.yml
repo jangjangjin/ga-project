@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 934484537646.dkr.ecr.ap-northeast-2.amazonaws.com
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t ecs-flaskapp -f hotel_app/Dockerfile hotel_app  # ✅ 경로 명확히 지정
+
+  post_build:
+    commands:
+      - docker tag ecs-flaskapp 934484537646.dkr.ecr.ap-northeast-2.amazonaws.com/ecs-flaskapp:latest
+      - docker push 934484537646.dkr.ecr.ap-northeast-2.amazonaws.com/ecs-flaskapp:latest
+      - aws ecs update-service --cluster app-cluster --service app-service --force-new-deployment
