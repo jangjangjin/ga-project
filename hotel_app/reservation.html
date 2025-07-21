@@ -167,7 +167,7 @@
             formData.append('payment', payment);
             formData.append('totalPrice', totalPriceVal);
             try {
-                const response = await fetch('http://app-alb-1057093234.ap-northeast-2.elb.amazonaws.com/reservations', {
+                const response = await fetch('http://172.18.1.100/reservations', {
                     method: 'POST',
                     body: formData
                 });
