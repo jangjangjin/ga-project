@@ -132,7 +132,7 @@
         formData.append('confirm_password', confirm_password);
         try {
           
-          const response = await fetch('http://[플라스크 서버의 실제 IP]:5000/register', {
+          const response = await fetch('http://172.18.1.100:5000/register', {
              method: 'POST',
              body: formData
             });
