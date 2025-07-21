@@ -19,6 +19,30 @@
     <link rel="stylesheet" href="assets/css/owl.css">
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <style>
+ul.nav {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+ul.nav li {
+  display: flex;
+  align-items: center;
+}
+a.nav-link {
+  color: #222;
+  font-weight: 500;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a.nav-link:hover, a.nav-link.active {
+  color: #e74c3c;
+}
+</style>
 <!--
 
 TemplateMo 591 villa agency
@@ -81,8 +105,10 @@ https://templatemo.com/tm-591-villa-agency
                       <li><a href="properties.html">매물 목록</a></li>
                       <li><a href="property-details.html">매물 상세</a></li>
                       <li><a href="contact.html">문의하기</a></li>
-                      <li><a href="login.html">로그인</a></li>
-                      <li><a href="register.html">회원가입</a></li>
+                      <li><a href="login.html" id="loginMenu" class="nav-link">로그인</a></li>
+                      <li><a href="register.html" id="registerMenu" class="nav-link">회원가입</a></li>
+                      <li><a href="mypage.html" id="mypageMenu" class="nav-link" style="display:none;">마이페이지</a></li>
+                      <li><a href="#" id="logoutBtn" class="nav-link" style="display:none;">로그아웃</a></li>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>메뉴</span>
@@ -300,7 +326,7 @@ https://templatemo.com/tm-591-villa-agency
                       <h4>추가 정보</h4>
                       <p>이 사이트는 다양한 무료 CSS 템플릿을 제공합니다. TemplateMo를 검색해보세요.<br><br>포트폴리오, 원페이지 레이아웃 등 다양한 템플릿이 있습니다.</p>
                       <div class="icon-button">
-                        <a href="property-details.html"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -325,7 +351,7 @@ https://templatemo.com/tm-591-villa-agency
                       <h4>상세 정보</h4>
                       <p>다양한 매물 정보를 확인하고, 신속하게 문의할 수 있습니다.<br><br>믿을 수 있는 중개 서비스로 안심하세요.</p>
                       <div class="icon-button">
-                        <a href="property-details.html"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -350,7 +376,7 @@ https://templatemo.com/tm-591-villa-agency
                       <h4>추가 정보</h4>
                       <p>믿을 수 있는 정보와 다양한 매물을 제공합니다.<br><br>언제든 문의해 주세요.</p>
                       <div class="icon-button">
-                        <a href="property-details.html"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -388,7 +414,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>6대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -406,7 +432,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>8대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -424,7 +450,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>10대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -442,7 +468,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>2대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -460,7 +486,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>2대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -478,7 +504,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>3대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -578,6 +604,35 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+  <script>
+window.addEventListener('DOMContentLoaded', function() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const isLoggedIn = !!user.username;
+    const loginMenu = document.getElementById('loginMenu');
+    const registerMenu = document.getElementById('registerMenu');
+    const mypageMenu = document.getElementById('mypageMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (isLoggedIn) {
+        if (loginMenu) loginMenu.style.display = 'none';
+        if (registerMenu) registerMenu.style.display = 'none';
+        if (mypageMenu) mypageMenu.style.display = '';
+        if (logoutBtn) logoutBtn.style.display = '';
+    } else {
+        if (loginMenu) loginMenu.style.display = '';
+        if (registerMenu) registerMenu.style.display = '';
+        if (mypageMenu) mypageMenu.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            alert('로그아웃 되었습니다.');
+            window.location.href = 'login.html';
+        });
+    }
+});
+</script>
 
   </body>
 </html>

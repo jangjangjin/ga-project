@@ -93,17 +93,16 @@
     <div class="reservation-container">
         <h2>예약 및 결제</h2>
         <form id="reservationForm">
+            <label for="reserver_name">예약자명</label>
+            <input type="text" id="reserver_name" name="reserver_name" required>
+            <label for="phone">연락처</label>
+            <input type="tel" id="phone" name="phone" required>
+            <label for="hotel">호텔명</label>
+            <input type="text" id="hotel" name="hotel" required>
             <label for="checkin">체크인 날짜</label>
             <input type="date" id="checkin" name="checkin" required>
-
             <label for="checkout">체크아웃 날짜</label>
             <input type="date" id="checkout" name="checkout" required>
-
-            <div class="result">
-                숙박 일수: <span id="nights">0</span>박<br>
-                총 금액: <span id="totalPrice">0</span>원
-            </div>
-
             <label for="payment">결제 수단</label>
             <select id="payment" name="payment" required>
                 <option value="">결제 수단 선택</option>
@@ -112,14 +111,14 @@
                 <option value="kakaopay">카카오페이</option>
                 <option value="naverpay">네이버페이</option>
             </select>
-
+            <label for="totalPrice">결제 금액</label>
+            <input type="text" id="totalPrice" name="totalPrice" readonly value="0">
             <button type="submit">결제하기</button>
         </form>
     </div>
     <script>
         const checkin = document.getElementById('checkin');
         const checkout = document.getElementById('checkout');
-        const nights = document.getElementById('nights');
         const totalPrice = document.getElementById('totalPrice');
         const pricePerNight = 100000;
 
@@ -129,29 +128,59 @@
             if (checkin.value && checkout.value && checkoutDate > checkinDate) {
                 const diffTime = checkoutDate - checkinDate;
                 const diffDays = diffTime / (1000 * 60 * 60 * 24);
-                nights.textContent = diffDays;
-                totalPrice.textContent = (diffDays * pricePerNight).toLocaleString();
+                totalPrice.value = (diffDays * pricePerNight).toLocaleString();
             } else {
-                nights.textContent = 0;
-                totalPrice.textContent = 0;
+                totalPrice.value = 0;
             }
         }
 
         checkin.addEventListener('change', calculateNightsAndPrice);
         checkout.addEventListener('change', calculateNightsAndPrice);
 
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+        document.getElementById('reservationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (nights.textContent === '0') {
-                alert('숙박 일수를 확인해주세요.');
+            const reserver_name = document.getElementById('reserver_name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const hotel = document.getElementById('hotel').value.trim();
+            const checkinVal = document.getElementById('checkin').value;
+            const checkoutVal = document.getElementById('checkout').value;
+            const payment = document.getElementById('payment').value;
+            const totalPriceVal = document.getElementById('totalPrice').value;
+            // localStorage에서 로그인한 사용자의 username을 읽어옴
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const username = user.username || '';
+            if (!username) {
+                alert('로그인 정보가 없습니다.');
                 return;
             }
-            if (!document.getElementById('payment').value) {
-                alert('결제 수단을 선택해주세요.');
+            if (!reserver_name || !phone || !hotel || !checkinVal || !checkoutVal || !payment || !totalPriceVal) {
+                alert('모든 필드를 입력해주세요.');
                 return;
             }
-            location.href = 'payment-success.html';
-            // 실제 결제 연동은 백엔드 구현 필요
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('reserver_name', reserver_name);
+            formData.append('phone', phone);
+            formData.append('hotel', hotel);
+            formData.append('checkin', checkinVal);
+            formData.append('checkout', checkoutVal);
+            formData.append('payment', payment);
+            formData.append('totalPrice', totalPriceVal);
+            try {
+                const response = await fetch('http://172.18.1.100:5000/reserve', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.result === 'success') {
+                    alert('예약이 완료되었습니다!');
+                    location.href = 'payment-success.html';
+                } else {
+                    alert(result.msg || '예약에 실패했습니다.');
+                }
+            } catch (err) {
+                alert('서버 오류가 발생했습니다.');
+            }
         });
     </script>
 </body>

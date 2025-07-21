@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 - 내 예약 내역</title>
+    <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
+    <style>
+        .mypage-container {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 8px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        th {
+            background: #f8f8f8;
+        }
+        ul.nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        ul.nav li {
+            display: flex;
+            align-items: center;
+        }
+        a.nav-link {
+            color: #222;
+            font-weight: 500;
+            font-size: 1.1em;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a.nav-link:hover, a.nav-link.active {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a href="index.html" class="logo">
+                            <h1>GARANGBI</h1>
+                        </a>
+                        <ul class="nav">
+                            <li><a href="index.html" class="nav-link">홈</a></li>
+                            <li><a href="properties.html" class="nav-link">매물 목록</a></li>
+                            <li><a href="property-details.html" class="nav-link">매물 상세</a></li>
+                            <li><a href="contact.html" class="nav-link">문의하기</a></li>
+                            <li><a href="mypage.html" id="mypageMenu" class="nav-link" style="display:none;">마이페이지</a></li>
+                            <li><a href="#" id="logoutBtn" class="nav-link" style="display:none;">로그아웃</a></li>
+                            <li><a href="login.html" id="loginMenu" class="nav-link">로그인</a></li>
+                            <li><a href="register.html" id="registerMenu" class="nav-link">회원가입</a></li>
+                        </ul>
+                        <a class="menu-trigger"><span>Menu</span></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="mypage-container">
+        <h2>내 예약 내역</h2>
+        <div id="resultArea"></div>
+    </div>
+    <script>
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    // YYYY-MM-DD 형식
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+window.addEventListener('DOMContentLoaded', async function() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const username = user.username || '';
+    console.log('username for mypage:', username);
+    if (!username) {
+        document.getElementById('resultArea').innerHTML = '<p>로그인 정보가 없습니다.<br>로그인 후 이용해 주세요.</p>';
+        return;
+    }
+    try {
+        const response = await fetch('http://172.18.1.100:5000/reservations?username=' + encodeURIComponent(username));
+        const result = await response.json();
+        if (result.result === 'success' && result.data.length > 0) {
+            let html = '<table><thead><tr><th>예약자명</th><th>연락처</th><th>호텔명</th><th>체크인</th><th>체크아웃</th><th>결제 수단</th><th>결제 금액</th></tr></thead><tbody>';
+            result.data.forEach(r => {
+                html += `<tr>
+                    <td>${r.reserver_name}</td>
+                    <td>${r.phone}</td>
+                    <td>${r.hotel}</td>
+                    <td>${formatDate(r.checkin)}</td>
+                    <td>${formatDate(r.checkout)}</td>
+                    <td>${r.payment_method}</td>
+                    <td>${Number(r.total_price).toLocaleString()}원</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('resultArea').innerHTML = html;
+        } else {
+            document.getElementById('resultArea').innerHTML = '<p>예약 내역이 없습니다.</p>';
+        }
+    } catch (err) {
+        document.getElementById('resultArea').innerHTML = '<p>서버 오류가 발생했습니다.</p>';
+    }
+});
+</script>
+</body>
+</html> 

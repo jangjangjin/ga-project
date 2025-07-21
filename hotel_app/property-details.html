@@ -81,8 +81,10 @@ https://templatemo.com/tm-591-villa-agency
                       <li><a href="properties.html">매물 목록</a></li>
                       <li><a href="property-details.html" class="active">매물 상세</a></li>
                       <li><a href="contact.html">문의하기</a></li>
-                      <li><a href="login.html">로그인</a></li>
-                      <li><a href="register.html">회원가입</a></li>
+                      <li><a href="login.html" id="loginMenu" class="nav-link">로그인</a></li>
+                      <li><a href="register.html" id="registerMenu" class="nav-link">회원가입</a></li>
+                      <li><a href="mypage.html" id="mypageMenu" class="nav-link" style="display:none;">마이페이지</a></li>
+                      <li><a href="#" id="logoutBtn" class="nav-link" style="display:none;">로그아웃</a></li>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>메뉴</span>
@@ -228,7 +230,7 @@ https://templatemo.com/tm-591-villa-agency
 <br><br>
 트렌디한 감성, 실용적인 디자인, 그리고 개성 넘치는 인테리어까지! 최신 유행을 반영한 감각적인 공간에서 새로운 라이프스타일을 시작해보세요.</p>
                       <div class="icon-button">
-                        <a href="#"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -256,7 +258,7 @@ https://templatemo.com/tm-591-villa-agency
 <br><br>
 트렌디한 감성, 실용적인 디자인, 그리고 개성 넘치는 인테리어까지! 최신 유행을 반영한 감각적인 공간에서 새로운 라이프스타일을 시작해보세요.</p>
                       <div class="icon-button">
-                        <a href="#"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -282,7 +284,7 @@ https://templatemo.com/tm-591-villa-agency
                       <h4>펜트하우스 추가 정보</h4>
                       <p>편안한 삶을 위한 공간, 다양한 스타일과 감각이 어우러진 특별한 주거 환경을 경험해보세요.<br><br>트렌디한 감성, 실용적인 디자인, 그리고 개성 넘치는 인테리어까지! 최신 유행을 반영한 감각적인 공간에서 새로운 라이프스타일을 시작해보세요.</p>
                       <div class="icon-button">
-                        <a href="#"><i class="fa fa-calendar"></i> 방문 예약</a>
+                        <a href="reservation.html"><i class="fa fa-calendar"></i> 방문 예약</a>
                       </div>
                     </div>
                   </div>
@@ -312,6 +314,35 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+
+  <script>
+window.addEventListener('DOMContentLoaded', function() {
+    const isLoggedIn = !!localStorage.getItem('user');
+    const loginMenu = document.getElementById('loginMenu');
+    const registerMenu = document.getElementById('registerMenu');
+    const mypageMenu = document.getElementById('mypageMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (isLoggedIn) {
+        if (loginMenu) loginMenu.style.display = 'none';
+        if (registerMenu) registerMenu.style.display = 'none';
+        if (mypageMenu) mypageMenu.style.display = '';
+        if (logoutBtn) logoutBtn.style.display = '';
+    } else {
+        if (loginMenu) loginMenu.style.display = '';
+        if (registerMenu) registerMenu.style.display = '';
+        if (mypageMenu) mypageMenu.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            alert('로그아웃 되었습니다.');
+            window.location.href = 'login.html';
+        });
+    }
+});
+</script>
 
   </body>
 </html>

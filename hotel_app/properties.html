@@ -80,8 +80,10 @@ https://templatemo.com/tm-591-villa-agency
                       <li><a href="properties.html" class="active">매물 목록</a></li>
                       <li><a href="property-details.html">매물 상세</a></li>
                       <li><a href="contact.html">문의하기</a></li>
-                      <li><a href="login.html">로그인</a></li>
-                      <li><a href="register.html">회원가입</a></li>
+                      <li><a href="login.html" id="loginMenu" class="nav-link">로그인</a></li>
+                      <li><a href="register.html" id="registerMenu" class="nav-link">회원가입</a></li>
+                      <li><a href="mypage.html" id="mypageMenu" class="nav-link" style="display:none;">마이페이지</a></li>
+                      <li><a href="#" id="logoutBtn" class="nav-link" style="display:none;">로그아웃</a></li>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>메뉴</span>
@@ -136,7 +138,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>6대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -154,7 +156,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>8대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -172,7 +174,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>10대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -190,7 +192,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>2대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -208,7 +210,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>2대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -226,7 +228,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>3대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -244,7 +246,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>12대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -262,7 +264,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>14대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -280,7 +282,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>주차: <span>10대</span></li>
             </ul>
             <div class="main-button">
-              <a href="property-details.html">방문 예약</a>
+              <a href="reservation.html">방문 예약</a>
             </div>
           </div>
         </div>
@@ -315,6 +317,35 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+
+  <script>
+window.addEventListener('DOMContentLoaded', function() {
+    const isLoggedIn = !!localStorage.getItem('user');
+    const loginMenu = document.getElementById('loginMenu');
+    const registerMenu = document.getElementById('registerMenu');
+    const mypageMenu = document.getElementById('mypageMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (isLoggedIn) {
+        if (loginMenu) loginMenu.style.display = 'none';
+        if (registerMenu) registerMenu.style.display = 'none';
+        if (mypageMenu) mypageMenu.style.display = '';
+        if (logoutBtn) logoutBtn.style.display = '';
+    } else {
+        if (loginMenu) loginMenu.style.display = '';
+        if (registerMenu) registerMenu.style.display = '';
+        if (mypageMenu) mypageMenu.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            alert('로그아웃 되었습니다.');
+            window.location.href = 'login.html';
+        });
+    }
+});
+</script>
 
   </body>
 </html>
