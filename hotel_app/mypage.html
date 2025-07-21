@@ -26,15 +26,15 @@
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 12px 8px; /* 패딩을 살짝 늘려 가독성 개선 */
+            padding: 12px 8px;
             text-align: center;
-            vertical-align: middle; /* 세로 중앙 정렬 추가 */
-            word-break: keep-all; /* 한글 단어 깨짐 방지 */
+            vertical-align: middle;
+            word-break: break-all; /* 길면 줄바꿈, ... 없이 모두 보임 */
             /* white-space, overflow, text-overflow 완전히 제거 */
         }
         th:nth-child(4), th:nth-child(5),
         td:nth-child(4), td:nth-child(5) {
-            min-width: 120px; /* 날짜 칼럼 넓이 확보 */
+            min-width: 130px; /* 날짜 칼럼 넓이 확보 */
         }
         th {
             background: #f8f8f8;
