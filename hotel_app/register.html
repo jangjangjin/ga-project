@@ -131,9 +131,10 @@
         formData.append('password', password);
         formData.append('confirm_password', confirm_password);
         try {
-            const response = await fetch('http://172.18.1.100:5000/register', {
-                method: 'POST',
-                body: formData
+          
+          const response = await fetch('http://172.18.1.100:5000/register', {
+             method: 'POST',
+             body: formData
             });
             const result = await response.json();
             if (result.result === 'success') {
