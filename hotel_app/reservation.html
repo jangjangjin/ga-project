@@ -167,7 +167,7 @@
             formData.append('payment', payment);
             formData.append('totalPrice', totalPriceVal);
             try {
-                const response = await fetch('http://172.18.1.100:5000/reserve', {
+                const response = await fetch('http://172.18.1.100:5000/reservations', {
                     method: 'POST',
                     body: formData
                 });
