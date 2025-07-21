@@ -41,15 +41,12 @@
             <a href="index.html" class="logo">
               <h1>GARANGBI</h1>
             </a>
-            <ul class="nav">
-              <li><a href="index.html">홈</a></li>
-              <li><a href="properties.html">매물 목록</a></li>
-              <li><a href="property-details.html">매물 상세</a></li>
-              <li><a href="contact.html">문의하기</a></li>
-              <li><a href="login.html" id="loginMenu" class="nav-link">로그인</a></li>
-              <li><a href="register.html" id="registerMenu" class="nav-link">회원가입</a></li>
-              <li><a href="mypage.html" id="mypageMenu" class="nav-link" style="display:none;">마이페이지</a></li>
-              <li><a href="#" id="logoutBtn" class="nav-link" style="display:none;">로그아웃</a></li>
+            <ul class="nav" id="mainNav">
+              <li><a href="index.html" class="nav-link">홈</a></li>
+              <li><a href="properties.html" class="nav-link">매물 목록</a></li>
+              <li><a href="property-details.html" class="nav-link">매물 상세</a></li>
+              <li><a href="contact.html" class="nav-link">문의하기</a></li>
+              <!-- 로그인/회원가입/마이페이지/로그아웃 메뉴는 JS로 동적 생성 -->
             </ul>
             <a class='menu-trigger'>
               <span>Menu</span>
@@ -124,30 +121,52 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   <script src="assets/js/custom.js"></script>
   <script>
 window.addEventListener('DOMContentLoaded', function() {
-    const isLoggedIn = !!localStorage.getItem('user');
-    const loginMenu = document.getElementById('loginMenu');
-    const registerMenu = document.getElementById('registerMenu');
-    const mypageMenu = document.getElementById('mypageMenu');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const nav = document.getElementById('mainNav');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const isLoggedIn = !!user.username;
     if (isLoggedIn) {
-        if (loginMenu) loginMenu.style.display = 'none';
-        if (registerMenu) registerMenu.style.display = 'none';
-        if (mypageMenu) mypageMenu.style.display = '';
-        if (logoutBtn) logoutBtn.style.display = '';
-    } else {
-        if (loginMenu) loginMenu.style.display = '';
-        if (registerMenu) registerMenu.style.display = '';
-        if (mypageMenu) mypageMenu.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-    }
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
+        // 마이페이지
+        const mypageLi = document.createElement('li');
+        const mypageA = document.createElement('a');
+        mypageA.href = 'mypage.html';
+        mypageA.className = 'nav-link';
+        mypageA.textContent = '마이페이지';
+        mypageLi.appendChild(mypageA);
+        nav.appendChild(mypageLi);
+        // 로그아웃
+        const logoutLi = document.createElement('li');
+        const logoutA = document.createElement('a');
+        logoutA.href = '#';
+        logoutA.className = 'nav-link';
+        logoutA.textContent = '로그아웃';
+        logoutA.addEventListener('click', function(e) {
             e.preventDefault();
             localStorage.removeItem('user');
             alert('로그아웃 되었습니다.');
             window.location.href = 'login.html';
         });
+        logoutLi.appendChild(logoutA);
+        nav.appendChild(logoutLi);
+    } else {
+        // 로그인
+        const loginLi = document.createElement('li');
+        const loginA = document.createElement('a');
+        loginA.href = 'login.html';
+        loginA.className = 'nav-link';
+        loginA.textContent = '로그인';
+        loginLi.appendChild(loginA);
+        nav.appendChild(loginLi);
+        // 회원가입
+        const registerLi = document.createElement('li');
+        const registerA = document.createElement('a');
+        registerA.href = 'register.html';
+        registerA.className = 'nav-link';
+        registerA.textContent = '회원가입';
+        registerLi.appendChild(registerA);
+        nav.appendChild(registerLi);
     }
+    // 메뉴 동적 추가 후 loaded 클래스 부여
+    nav.classList.add('loaded');
 });
 </script>
 </body>

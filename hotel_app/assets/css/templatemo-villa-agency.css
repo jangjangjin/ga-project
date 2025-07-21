@@ -399,6 +399,7 @@ Header Style
 .header-area .main-nav {
   background: transparent;
   display: flex;
+  align-items: center;
 }
 
 .header-area .main-nav .logo {
@@ -424,14 +425,24 @@ Header Style
 
 .header-area .main-nav ul.nav {
   flex-basis: 100%;
-  margin-top: 30px;
-  justify-content: right;
+  justify-content: flex-end;
+  width: 100%;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
   position: relative;
   z-index: 999;
+}
+
+ul.nav {
+  transform: translateX(-40px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(.77,0,.18,1);
+}
+ul.nav.loaded {
+  transform: translateX(0);
+  opacity: 1;
 }
 
 .header-area .main-nav .nav li:last-child {
@@ -441,8 +452,10 @@ Header Style
 .header-area .main-nav .nav li {
   padding-left: 10px;
   padding-right: 10px;
-  height: 100px;
-  line-height: 100px;
+  /* height: 100px; */
+  /* line-height: 100px; */
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .header-area .main-nav .nav li a {
@@ -451,7 +464,7 @@ Header Style
   padding-right: 20px;
   font-weight: 500;
   font-size: 15px;
-  height: 40px;
+  /* height: 40px; */
   line-height: 40px;
   text-transform: capitalize;
   color: #1e1e1e;
