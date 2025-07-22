@@ -11,7 +11,7 @@
     <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
     <style>
         .mypage-container {
-            max-width: 700px;
+            max-width: 800px; /* 컨테이너 너비를 늘려 공간 확보 */
             margin: 60px auto;
             padding: 30px;
             background: #fff;
@@ -22,15 +22,19 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 24px;
-            table-layout: fixed;
+            /* table-layout: fixed; 를 제거하여 내용에 따라 너비가 조절되도록 함 */
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 10px 8px;
+            padding: 12px 8px;
             text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            vertical-align: middle;
+            word-break: break-all; /* 길면 줄바꿈, ... 없이 모두 보임 */
+            /* white-space, overflow, text-overflow 완전히 제거 */
+        }
+        th:nth-child(4), th:nth-child(5),
+        td:nth-child(4), td:nth-child(5) {
+            min-width: 130px; /* 날짜 칼럼 넓이 확보 */
         }
         th {
             background: #f8f8f8;
@@ -206,6 +210,7 @@ window.addEventListener('DOMContentLoaded', function() {
         registerLi.appendChild(registerA);
         nav.appendChild(registerLi);
     }
+    //
     // 메뉴 동적 추가 후 loaded 클래스 부여
     nav.classList.add('loaded');
 });
