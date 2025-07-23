@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     log_link = detail.get('additional-information', {}).get('logs', {}).get('deep-link', 'N/A')
     time = event.get('time', 'N/A')
 
-    message = f"""📣 CodeBuild 알림
+    message = f"""📣 가랑비 CodeBuild 알림
 
 🔧 프로젝트: {project_name}
 📅 시간: {time}

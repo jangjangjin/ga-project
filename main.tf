@@ -598,11 +598,7 @@ PATTERN
 
 }
 
-resource "aws_cloudwatch_event_target" "SnsTarget" {
-  rule      = aws_cloudwatch_event_rule.EventBridgeRule.name
-  target_id = "CodeBuildProject"
-  arn       = aws_sns_topic.SnsTopicCodeBuild.arn
-}
+
 
 resource "aws_sns_topic_subscription" "SnsTopicSubscription" {
   topic_arn = aws_sns_topic.SnsTopicCodeBuild.arn
@@ -710,4 +706,25 @@ resource "aws_lambda_permission" "AllowCWInvoke" {
   function_name = aws_lambda_function.format_notification.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.EventBridgeRule.arn
+}
+
+
+resource "aws_iam_policy" "lambda_sns_publish" {
+  name = "lambda-sns-publish"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = "sns:Publish",
+        Resource = aws_sns_topic.SnsTopicCodeBuild.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_sns_publish_attach" {
+  name       = "lambda-sns-publish-attach"
+  policy_arn = aws_iam_policy.lambda_sns_publish.arn
+  roles      = [aws_iam_role.lambda_exec_role.name]
 }
