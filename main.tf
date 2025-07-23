@@ -663,3 +663,44 @@ resource "aws_route" "to_onprem" {
 
 
 
+
+
+
+# ==============lmabda =====================
+resource "aws_iam_role" "lambda_exec_role" {
+  name = "lambda-exec-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_lambda_function" "format_notification" {
+  function_name = "FormatCodeBuildNotification"
+  handler       = "string_format.lambda_handler"
+  runtime       = "python3.11"
+  role          = aws_iam_role.lambda_exec_role.arn
+  filename      = "string_format.zip"  # 사전에 압축된 코드 업로드 필요
+}
+
+resource "aws_cloudwatch_event_target" "LambdaTarget" {
+  rule      = aws_cloudwatch_event_rule.EventBridgeRule.name
+  target_id = "FormattedCodeBuild"
+  arn       = aws_lambda_function.format_notification.arn
+}
+
+resource "aws_lambda_permission" "AllowCWInvoke" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.format_notification.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.EventBridgeRule.arn
+}
