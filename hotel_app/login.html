@@ -11,27 +11,27 @@
   <link rel="stylesheet" href="assets/css/owl.css">
   <link rel="stylesheet" href="assets/css/animate.css">
 </head>
-<div class="sub-header">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-8">
-        <ul class="info">
-          <li><i class="fa fa-envelope"></i> info@soldesk.com</li>
-          <li><i class="fa fa-map"></i> 서울특별시 종로구 종로12길 15</li>
-        </ul>
-      </div>
-      <div class="col-lg-4 col-md-4">
-        <ul class="social-links">
-          <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-          <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-          <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-        </ul>
+<body>
+  <div class="sub-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-8">
+          <ul class="info">
+            <li><i class="fa fa-envelope"></i> info@soldesk.com</li>
+            <li><i class="fa fa-map"></i> 서울특별시 종로구 종로12길 15</li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <ul class="social-links">
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<body>
   <!-- ***** Header Area Start ***** -->
   <header class="header-area header-sticky">
     <div class="container">
@@ -90,7 +90,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     try {
         const response = await fetch('http://172.18.1.100:5000/login', { 
             method: 'POST',
-            body: formData // 서버
+            body: formData
         });
         const result = await response.json();
         if (result.result === 'success') {
@@ -101,7 +101,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             alert(result.msg || '로그인에 실패했습니다.');
         }
     } catch (err) {
-        alert('서버 오류가 발생했습니다.');  
+        alert('서버 오류가 발생했습니다.');
+    }
+});
+  </script>
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/js/isotope.min.js"></script>
@@ -154,9 +157,8 @@ window.addEventListener('DOMContentLoaded', function() {
         registerLi.appendChild(registerA);
         nav.appendChild(registerLi);
     }
-    // 메뉴 동적 추가 후 loaded 클래스 부여
     nav.classList.add('loaded');
 });
-</script>
+  </script>
 </body>
-</html> 
+</html>
