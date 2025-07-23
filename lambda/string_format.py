@@ -1,26 +1,27 @@
 import json
 import boto3
+import os
+
+sns = boto3.client('sns')
 
 def lambda_handler(event, context):
-    sns = boto3.client('sns')
-    
     detail = event['detail']
     project_name = detail.get('project-name', 'N/A')
     status = detail.get('build-status', 'N/A')
-    time = event.get('time', 'N/A')
     log_link = detail.get('additional-information', {}).get('logs', {}).get('deep-link', 'N/A')
+    time = event.get('time', 'N/A')
 
-    msg = f"""
-    📢 CodeBuild Notification
+    message = f"""📣 CodeBuild 알림
 
-    🧱 Project: {project_name}
-    🟢 Status: {status}
-    🕐 Time: {time}
-    🔗 Logs: {log_link}
-    """
+🔧 프로젝트: {project_name}
+📅 시간: {time}
+📌 상태: {status}
+🔍 로그 보기: {log_link}
+"""
 
-    sns.publish(
-        TopicArn='arn:aws:sns:ap-northeast-2:xxx:SnsTopicCodeBuild',
+    response = sns.publish(
+        TopicArn=os.environ['SNS_TOPIC_ARN'],
         Subject=f"[CodeBuild] {project_name} - {status}",
-        Message=msg
+        Message=message
     )
+    return {"status": "ok", "sns_response": response}
